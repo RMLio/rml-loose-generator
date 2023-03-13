@@ -1,0 +1,24 @@
+prefixes:
+  gtfs: http://vocab.gtfs.org/terms#
+
+mappings:
+  shapes:
+    sources:
+      - [/data/SHAPES.csv~csv]
+    s: http://transport.linkeddata.es/madrid/metro/shape/$(shape_id)
+    po:
+      - [a, gtfs:Shape]
+      - p: gtfs:shapePoint
+        o:
+          - mapping: shapePoints
+            condition:
+              function: equal
+              parameters:
+                - [str1, $(shape_id)]
+                - [str2, $(shape_id)]
+  shapePoints:
+    sources:
+      - [/data/SHAPES.csv~csv]
+    s: http://transport.linkeddata.es/madrid/metro/shape_point/$(shape_id)-$(shape_pt_sequence)
+    po:
+      - [a, gtfs:ShapePoint]

@@ -1,0 +1,65 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix fnml: <http://semweb.mmlab.be/ns/fnml#>.
+@prefix fno: <https://w3id.org/function/ontology#>.
+@prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#>.
+@prefix void: <http://rdfs.org/ns/void#>.
+@prefix dc: <http://purl.org/dc/terms/>.
+@prefix foaf: <http://xmlns.com/foaf/0.1/>.
+@prefix rml: <http://semweb.mmlab.be/ns/rml#>.
+@prefix ql: <http://semweb.mmlab.be/ns/ql#>.
+@prefix : <http://mapping.example.com/>.
+@prefix gtfs: <http://vocab.gtfs.org/terms#>.
+
+:rules_000 a void:Dataset;
+    void:exampleResource :map_agency_000, :map_routes_000.
+:map_routes_000 a rr:TriplesMap;
+    rml:logicalSource :source_000;
+    rdfs:label "routes";
+    rr:subjectMap :s_000;
+    rr:predicateObjectMap :pom_001, :pom_000.
+:source_000 a rml:LogicalSource;
+    rml:source "/data/ROUTES.csv";
+    rml:referenceFormulation ql:CSV;
+    rml:iterator "row".
+:s_000 a rr:TermMap, rr:SubjectMap;
+    rr:template "http://transport.linkeddata.es/madrid/metro/routes/{route_id}".
+:pom_000 a rr:PredicateObjectMap;
+    rr:predicateMap :pm_000;
+    rr:objectMap :om_000.
+:pm_000 a rr:TermMap, rr:PredicateMap;
+    rr:constant rdf:type.
+:om_000 a rr:TermMap, rr:ObjectMap;
+    rr:constant "http://vocab.gtfs.org/terms#Route";
+    rr:termType rr:IRI.
+:pom_001 a rr:PredicateObjectMap;
+    rr:predicateMap :pm_001;
+    rr:objectMap :om_001.
+:pm_001 a rr:TermMap, rr:PredicateMap;
+    rr:constant gtfs:agency.
+:om_001 a rr:RefObjectMap;
+    rr:parentTriplesMap :map_agency_000;
+    rr:joinCondition :jc_000.
+:map_agency_000 a rr:TriplesMap;
+    rml:logicalSource :source_001;
+    rdfs:label "agency";
+    rr:subjectMap :s_001;
+    rr:predicateObjectMap :pom_002.
+:source_001 a rml:LogicalSource;
+    rml:source "/data/AGENCY.csv";
+    rml:referenceFormulation ql:CSV;
+    rml:iterator "row".
+:s_001 a rr:TermMap, rr:SubjectMap;
+    rr:template "http://transport.linkeddata.es/madrid/agency/{agency_id}".
+:pom_002 a rr:PredicateObjectMap;
+    rr:predicateMap :pm_002;
+    rr:objectMap :om_002.
+:pm_002 a rr:TermMap, rr:PredicateMap;
+    rr:constant rdf:type.
+:om_002 a rr:TermMap, rr:ObjectMap;
+    rr:constant "http://vocab.gtfs.org/terms#Agency";
+    rr:termType rr:IRI.
+:jc_000 rr:child "agency_id";
+    rr:parent "agency_id".
+

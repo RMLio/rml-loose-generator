@@ -1,0 +1,24 @@
+prefixes:
+  gtfs: http://vocab.gtfs.org/terms#
+
+mappings:
+  routes:
+    sources:
+      - [/data/ROUTES.csv~csv]
+    s: http://transport.linkeddata.es/madrid/metro/routes/$(route_id)
+    po:
+      - [a, gtfs:Route]
+      - p: gtfs:agency
+        o:
+          - mapping: agency
+            condition:
+              function: equal
+              parameters:
+                - [str1, $(agency_id)]
+                - [str2, $(agency_id)]
+  agency:
+    sources:
+      - [/data/AGENCY.csv~csv]
+    s: http://transport.linkeddata.es/madrid/agency/$(agency_id)
+    po:
+      - [a, gtfs:Agency]

@@ -1,0 +1,18 @@
+prefixes:
+  gtfs: http://vocab.gtfs.org/terms#
+
+mappings:
+  stops:
+    sources:
+      - [./data/gtfs-csv-01/STOPS.csv~csv]
+    s: http://transport.linkeddata.es/madrid/metro/stops/$(stop_id)
+    po:
+      - [a,gtfs:Stop]
+      - p: gtfs:parentStation
+        o:
+          - mapping: stops
+            condition:
+              function: equal
+              parameters:
+                - [str1, $(parent_station)]
+                - [str2, $(stop_id)]

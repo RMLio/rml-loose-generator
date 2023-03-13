@@ -1,0 +1,61 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#>.
+@prefix rml: <http://semweb.mmlab.be/ns/rml#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix fno: <https://w3id.org/function/ontology#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix ex: <http://mapping.example.com/>.
+@prefix idlabfn: <http://example.com/idlab/function/>.
+@prefix fnml: <http://semweb.mmlab.be/ns/fnml#>.
+@prefix grel: <http://users.ugent.be/~bjdmeest/function/grel.ttl#>.
+@prefix ql: <http://semweb.mmlab.be/ns/ql#>.
+
+ex:rules_000 a <http://rdfs.org/ns/void#Dataset>;
+    <http://rdfs.org/ns/void#exampleResource> ex:map_agency_000, ex:map_routes_000.
+ex:map_agency_000 a rr:TriplesMap;
+    rml:logicalSource ex:source_001;
+    rdfs:label "agency";
+    rr:subjectMap ex:s_001;
+    rr:predicateObjectMap ex:pom_002.
+ex:map_routes_000 a rr:TriplesMap;
+    rml:logicalSource ex:source_000;
+    rdfs:label "routes";
+    rr:subjectMap ex:s_000;
+    rr:predicateObjectMap ex:pom_001, ex:pom_000.
+ex:source_000 a rml:LogicalSource;
+    rml:source "/data/ROUTES.csv";
+    rml:referenceFormulation ql:CSV;
+    rml:iterator "row".
+ex:s_000 a rr:TermMap, rr:SubjectMap;
+    rr:template "http://transport.linkeddata.es/madrid/metro/routes/{route_id}".
+ex:pom_001 a rr:PredicateObjectMap;
+    rr:predicateMap ex:pm_001;
+    rr:objectMap ex:om_001.
+ex:pom_000 a rr:PredicateObjectMap;
+    rr:predicateMap ex:pm_000;
+    rr:objectMap ex:om_000.
+ex:pm_000 a rr:TermMap, rr:PredicateMap;
+    rr:constant rdf:type.
+ex:om_000 a rr:TermMap, rr:ObjectMap;
+    rr:constant "http://vocab.gtfs.org/terms#Route";
+    rr:termType rr:IRI.
+ex:pm_001 a rr:TermMap, rr:PredicateMap;
+    rr:constant <http://vocab.gtfs.org/terms#agency>.
+ex:om_001 a rr:ObjectMap;
+    rr:template "http://transport.linkeddata.es/madrid/agency/{agency_id}";
+    rr:termType rr:IRI.
+ex:source_001 a rml:LogicalSource;
+    rml:source "/data/AGENCY.csv";
+    rml:referenceFormulation ql:CSV;
+    rml:iterator "row".
+ex:s_001 a rr:TermMap, rr:SubjectMap;
+    rr:template "http://transport.linkeddata.es/madrid/agency/{agency_id}".
+ex:pom_002 a rr:PredicateObjectMap;
+    rr:predicateMap ex:pm_002;
+    rr:objectMap ex:om_002.
+ex:pm_002 a rr:TermMap, rr:PredicateMap;
+    rr:constant rdf:type.
+ex:om_002 a rr:TermMap, rr:ObjectMap;
+    rr:constant "http://vocab.gtfs.org/terms#Agency";
+    rr:termType rr:IRI.
+
