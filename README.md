@@ -68,7 +68,7 @@ The effect of the scripts eliminateSelfJoins.js and makeLooseRML.js have been ev
 |           | gtfs-csv-05                             | 20                                  |
 |           | gtfs-csv-05-no-self-joins               | 23                                  |
 |           | gtfs-csv-05-loose                       | 22                                  |
-| mapper    | gtfs-csv-01                             | time out                            |
+| rmlmapper | gtfs-csv-01                             | time out                            |
 |           | gtfs-csv-01-no-self-joins               | 50                                  |
 |           | gtfs-csv-01-loose                       | 6                                   |
 |           | gtfs-csv-05                             | time out                            |
