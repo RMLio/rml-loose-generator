@@ -1,5 +1,5 @@
 **/.idea*/
 .~lock.*
-./node_modules/*
-./package-lock.json
-./resources/generate_and_compare.sh
+/node_modules/
+/package-lock.json
+/resources/generate_and_compare.sh
