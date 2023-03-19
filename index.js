@@ -135,7 +135,6 @@ const queryNoSelfJoinsComplexSourceR2RML = `${prefixesSPARQL}
 }`
 
 async function eliminateSelfJoins(store) {
-    await workAroundIssue199(store);
     // only for templates, conditions not take into account yet
     const bindingsStream1 = await myEngine.queryBindings(queryNoSelfJoins, {sources: [store]});
     const bindings1 = await bindingsStream1.toArray();
@@ -171,6 +170,11 @@ async function eliminateSelfJoins(store) {
             ]);
         }
     }
+}
+
+async function eliminateSelfJoinsInclIssue199(store) {
+    await workAroundIssue199(store);
+    await eliminateSelfJoins(store);
 }
 
 const queryLooseRML = `${prefixesSPARQL}
@@ -226,4 +230,4 @@ function cli(myFunction){
     putRMLInStore(rml, store).then(()=>
         myFunction(store).then(() => writeNewRML(store)));
 }
-module.exports = { workAroundIssue199, eliminateSelfJoins, makeLooseRML, cli };
+module.exports = { workAroundIssue199, eliminateSelfJoins, eliminateSelfJoinsInclIssue199, makeLooseRML, cli };
