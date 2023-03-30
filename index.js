@@ -1,5 +1,6 @@
 const N3 = require('n3');
 const fsp = require('fs/promises');
+const fs = require('fs');
 const path = require('path');
 
 const QueryEngine = require('@comunica/query-sparql-rdfjs').QueryEngine;
@@ -213,21 +214,80 @@ async function makeLooseRML(store) {
     }
 }
 
-function writeNewRML(store) {
+
+const queryConvertLooseJoins = `${prefixesSPARQL}
+    SELECT * WHERE { 
+    ?Om rr:parentTriplesMap ?ParentTriplesMap.
+    ?Om rr:joinCondition ?JoinCondition.
+    ?JoinCondition rml:looseJoin "true"^^xsd:boolean.
+    ?JoinCondition rr:child ?Child.
+    ?JoinCondition rr:parent ?Parent.
+    ?ParentTriplesMap rr:subjectMap ?ParentSubjectMap.
+    ?ParentSubjectMap rr:template ?ParentSubjectTemplate
+}`
+
+
+async function convertLooseJoins(store) {
+    const bindingsStream = await myEngine.queryBindings(queryConvertLooseJoins, {sources: [store]});
+    const bindings = await bindingsStream.toArray();
+    for (const binding of bindings) {
+        const parentSubjectTemplate = binding.get('ParentSubjectTemplate').value;
+        const parentRef = "{" + binding.get('Parent').value + "}";
+        const references = parentSubjectTemplate.match(/\{.*?\}/ug);
+        //when parentSubjectTemplate has only parentReferences , conditions not taken into account
+        if (references.every((r) => r === parentRef)) {
+            const newTemplate = parentSubjectTemplate.replaceAll(parentRef,
+                "{" + binding.get('Child').value + "}");
+            store.removeQuads([
+                tripleNNN(binding.get('Om').value, prefixes.rdf + 'type', prefixes.rr + 'RefObjectMap'),
+                tripleNNN(binding.get('Om').value, prefixes.rr + 'parentTriplesMap', binding.get('ParentTriplesMap').value),
+                tripleNNN(binding.get('Om').value, prefixes.rr + 'joinCondition', binding.get('JoinCondition').value),
+                tripleNNL(binding.get('JoinCondition').value, prefixes.rr + 'child', binding.get('Child').value),
+                tripleNNL(binding.get('JoinCondition').value, prefixes.rr + 'parent', binding.get('Parent').value)]);
+            store.addQuads([
+                tripleNNN(binding.get('Om').value, prefixes.rdf + 'type', prefixes.rr + 'ObjectMap'),
+                tripleNNL(binding.get('Om').value, prefixes.rr + 'template', newTemplate),
+                tripleNNN(binding.get('Om').value, prefixes.rr + 'termType', prefixes.rr + 'IRI')]);
+        }
+    }
+}
+
+function writeNewRMLToTerminal(store) {
    const writer = new N3.Writer({prefixes: prefixes});
    for (const quad of store) {
        writer.addQuad(quad);
        }
    writer.end((error, result) => {console.log(result);});
 }
+
+function writeNewRML(store, out) {
+   const writer = new N3.Writer({prefixes: prefixes});
+   for (const quad of store) {
+       writer.addQuad(quad);
+       }
+   writer.end((error, result) => {
+       fs.writeFile(out, result, (err) => {
+        if (err) throw err;});
+        });
+}
+
+
 function cli(myFunction){
     if (!process.argv[2]) {
         console.error('Please give the path to the rml file as first argument!');
         process.exit(-1);
     }
     const rml = process.argv[2];
+    const out = process.argv[3];
     const store = new N3.Store();
     putRMLInStore(rml, store).then(()=>
-        myFunction(store).then(() => writeNewRML(store)));
+        myFunction(store).then(() => {
+                if (process.argv[3]) {
+                    writeNewRML(store, out);
+                } else {
+                    writeNewRMLToTerminal(store);
+                }
+            }
+            ));
 }
 module.exports = { workAroundIssue199, eliminateSelfJoins, eliminateSelfJoinsInclIssue199, makeLooseRML, cli };
