@@ -6,7 +6,7 @@ Diagrams as illustration to section 2.1 in paper [Reference conditions: relating
 
 ![gtfs_diagram_with_relations](./gtfs_diagram_with_relations.png)
 
-## Diagram derived from an [adapted GTFS mapping file](./loose_gtfs_mapping.rml.ttl) (with crafted URI templates)
+## Diagram derived from an [adapted GTFS mapping file](./loose_gtfs_mapping.rml.ttl) (with crafted URI templates, without joins)
 
 ![gtfs_diagram_without_relations](./gtfs_diagram_without_relations.png)
 
