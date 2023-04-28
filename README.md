@@ -7,7 +7,7 @@ Proof-of-concept implementation related to paper [Reference conditions: relating
 Before starting:
 - install [Node.js](https://nodejs.org/en) (we tested with version v18.16.0)
 - run `npm install`
-- normalize the RML mapping file using [https://github.com/RMLio/rml-normalize]https://github.com/RMLio/rml-normalize)  
+- normalize the RML mapping file:[https://github.com/RMLio/rml-normalize](https://github.com/RMLio/rml-normalize)  
 Below implementation supposes that the RML mapping file used as input is normalized, e.g., no shortcuts as rr:subject, rr: object, rr:predicate.
 
 
