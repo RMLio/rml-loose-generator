@@ -1,6 +1,6 @@
 # RML Loose Generator
 
-Proof-of-concept implementation related to paper [Reference conditions: relating mapping rules without joining](https://openreview.net/forum?id=7wQTpBuPRqN) submitted to KGCW 2023
+Proof-of-concept implementation, related to paper [Reference conditions: relating mapping rules without joining](https://openreview.net/forum?id=7wQTpBuPRqN) (submitted to KGCW 2023)
 
 ## Prerequisite 
 

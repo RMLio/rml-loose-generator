@@ -1,6 +1,6 @@
 # Diagrams
 
-Diagrams as illustration to section 2.1 related to paper [Reference conditions: relating mapping rules without joining](https://openreview.net/forum?id=7wQTpBuPRqN) submitted to KGCW 2023
+Diagrams as illustration to section 2.1 in paper [Reference conditions: relating mapping rules without joining](https://openreview.net/forum?id=7wQTpBuPRqN) (submitted to KGCW 2023)
 
 ## Diagram derived from the [original GTFS mapping file](./gtfs_mapping.rml.ttl) (with referencing object maps)
 
