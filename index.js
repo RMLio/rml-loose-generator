@@ -214,44 +214,6 @@ async function makeLooseRML(store) {
     }
 }
 
-
-const queryConvertLooseJoins = `${prefixesSPARQL}
-    SELECT * WHERE { 
-    ?Om rr:parentTriplesMap ?ParentTriplesMap.
-    ?Om rr:joinCondition ?JoinCondition.
-    ?JoinCondition rml:looseJoin "true"^^xsd:boolean.
-    ?JoinCondition rr:child ?Child.
-    ?JoinCondition rr:parent ?Parent.
-    ?ParentTriplesMap rr:subjectMap ?ParentSubjectMap.
-    ?ParentSubjectMap rr:template ?ParentSubjectTemplate
-}`
-
-
-async function convertLooseJoins(store) {
-    const bindingsStream = await myEngine.queryBindings(queryConvertLooseJoins, {sources: [store]});
-    const bindings = await bindingsStream.toArray();
-    for (const binding of bindings) {
-        const parentSubjectTemplate = binding.get('ParentSubjectTemplate').value;
-        const parentRef = "{" + binding.get('Parent').value + "}";
-        const references = parentSubjectTemplate.match(/\{.*?\}/ug);
-        //when parentSubjectTemplate has only parentReferences , conditions not taken into account
-        if (references.every((r) => r === parentRef)) {
-            const newTemplate = parentSubjectTemplate.replaceAll(parentRef,
-                "{" + binding.get('Child').value + "}");
-            store.removeQuads([
-                tripleNNN(binding.get('Om').value, prefixes.rdf + 'type', prefixes.rr + 'RefObjectMap'),
-                tripleNNN(binding.get('Om').value, prefixes.rr + 'parentTriplesMap', binding.get('ParentTriplesMap').value),
-                tripleNNN(binding.get('Om').value, prefixes.rr + 'joinCondition', binding.get('JoinCondition').value),
-                tripleNNL(binding.get('JoinCondition').value, prefixes.rr + 'child', binding.get('Child').value),
-                tripleNNL(binding.get('JoinCondition').value, prefixes.rr + 'parent', binding.get('Parent').value)]);
-            store.addQuads([
-                tripleNNN(binding.get('Om').value, prefixes.rdf + 'type', prefixes.rr + 'ObjectMap'),
-                tripleNNL(binding.get('Om').value, prefixes.rr + 'template', newTemplate),
-                tripleNNN(binding.get('Om').value, prefixes.rr + 'termType', prefixes.rr + 'IRI')]);
-        }
-    }
-}
-
 function writeNewRMLToTerminal(store) {
    const writer = new N3.Writer({prefixes: prefixes});
    for (const quad of store) {
